@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    container_name: server-web-online-shopping-mall-clone
+    command: yarn dev
+    volumes:
+      - /app
+      - /app/node_modules
+    ports:
+      - "3022:4022"
+        # MongoDB services
+  mongo_db:
+    container_name: mongodb-online-shopping-mall-clone
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+  api:
+    build: .
+    container_name: server-api-online-shopping-mall-clone
+    ports:
+      - "4022:3022"
+    environment:
+      PORT: 3022
+      MONGODB_URI: mongodb://mongo_db:27017
+      DB_NAME: shop_clone
+      NAME: Aleksandr
+    depends_on:
+      - mongo_db  
+    volumes:
+      - /app
+      - /app/node_modules
+volumes:
+  mongo_db: {}
